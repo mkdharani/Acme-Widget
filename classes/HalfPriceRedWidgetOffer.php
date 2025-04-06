@@ -4,20 +4,24 @@ namespace Acme;
 
 class HalfPriceRedWidgetOffer implements OfferInterface
 {
-
     private string $productCode = 'R01';
 
     public function apply(array $items): float
     {
-        $count = count(array_filter($items, fn(Product $p) => $p->code === $this->productCode));
-        $discountAvailable = 0.0;
+        $r01Items = array_values(array_filter($items, function (Product $product) {
+            return $product->getCode() === $this->productCode;
+        }));
 
-        if ($count > 1) {
-            $foundProduct = current(array_filter($items, fn(Product $p) => $p->code === $this->productCode));
-            $halfPriceQuantity = intdiv($count, 2);
-            $discount = $halfPriceQuantity * ($foundProduct->price / 2);
+        $count = count($r01Items);
+        $halfPriceCount = intdiv($count, 2);
+
+        if ($halfPriceCount === 0) {
+            return 0.0;
         }
 
-        return $discountAvailable;
+        $price = $r01Items[0]->getPrice();
+        // printit($price, '$pruce');
+
+        return $halfPriceCount * ($price / 2);
     }
 }

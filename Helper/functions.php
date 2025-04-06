@@ -10,7 +10,7 @@ function printit($array, $die = NULL): void
     echo '</pre>';
 
     if($die){
-        "<br> die here.. $die";
+        die("<br> die here.. $die");
     }
 }
 
